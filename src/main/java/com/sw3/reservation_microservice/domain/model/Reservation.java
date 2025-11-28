@@ -27,8 +27,6 @@ public class Reservation {
 
     @Column(nullable = false)
     private Long serviceId;
-    //Pendiente saber si el inicio es el mismo programado que el real
-
     @Column(nullable = false)
     private LocalDateTime startTime;
 

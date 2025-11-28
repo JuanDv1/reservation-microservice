@@ -1,5 +1,5 @@
 package com.sw3.reservation_microservice.service.validation;
-import com.sw3.reservation_microservice.controller.dto.CreateReservationRequestDTO;
+import com.sw3.reservation_microservice.controller.dto.request.*;;;;
 
 public interface ReservationValidatorHandler {
     //Metodo para establecer el siguiente validador en la cadena

@@ -1,6 +1,6 @@
 package com.sw3.reservation_microservice.service.validation;
 
-import com.sw3.reservation_microservice.controller.dto.CreateReservationRequestDTO;
+import com.sw3.reservation_microservice.controller.dto.request.CreateReservationRequestDTO;
 
 public abstract class BaseValidatorHandler implements ReservationValidatorHandler {
     private ReservationValidatorHandler next;

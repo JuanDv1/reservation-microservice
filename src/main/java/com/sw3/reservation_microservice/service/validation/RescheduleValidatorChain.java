@@ -1,6 +1,6 @@
 package com.sw3.reservation_microservice.service.validation;
 
-import com.sw3.reservation_microservice.controller.dto.RescheduleReservationRequestDTO;
+import com.sw3.reservation_microservice.controller.dto.request.RescheduleReservationRequestDTO;
 import com.sw3.reservation_microservice.service.validation.handlers.BarberAvailabilityForRescheduleHandler;
 import com.sw3.reservation_microservice.service.validation.handlers.BusinessHoursForRescheduleHandler;
 import com.sw3.reservation_microservice.service.validation.handlers.TimeConsistencyForRescheduleHandler;

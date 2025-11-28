@@ -1,7 +1,7 @@
 package com.sw3.reservation_microservice.domain.state;
 
-import com.sw3.reservation_microservice.controller.controladorExcepciones.excepcionesPropias.CancellationNotAllowedException;
-import com.sw3.reservation_microservice.controller.controladorExcepciones.excepcionesPropias.InvalidReservationStateException;
+import com.sw3.reservation_microservice.config.controladorExcepciones.excepcionesPropias.CancellationNotAllowedException;
+import com.sw3.reservation_microservice.config.controladorExcepciones.excepcionesPropias.InvalidReservationStateException;
 import com.sw3.reservation_microservice.domain.model.Reservation;
 
 public class FinalizadaState implements ReservationState {

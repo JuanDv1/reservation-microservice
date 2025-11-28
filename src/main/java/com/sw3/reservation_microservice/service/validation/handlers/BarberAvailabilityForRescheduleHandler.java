@@ -1,8 +1,8 @@
 package com.sw3.reservation_microservice.service.validation.handlers;
 
 import com.sw3.reservation_microservice.access.ReservationRepository;
-import com.sw3.reservation_microservice.controller.dto.RescheduleReservationRequestDTO;
-import com.sw3.reservation_microservice.controller.controladorExcepciones.excepcionesPropias.ReservationValidationException;
+import com.sw3.reservation_microservice.config.controladorExcepciones.excepcionesPropias.ReservationValidationException;
+import com.sw3.reservation_microservice.controller.dto.request.RescheduleReservationRequestDTO;
 import com.sw3.reservation_microservice.domain.model.Reservation;
 import com.sw3.reservation_microservice.service.validation.RescheduleValidatorHandler;
 import org.springframework.beans.factory.annotation.Autowired;

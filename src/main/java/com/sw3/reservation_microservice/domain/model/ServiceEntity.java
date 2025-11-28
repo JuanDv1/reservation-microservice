@@ -5,53 +5,29 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 /**
- * Entidad Servicio - Copia sincronizada del microservicio de servicios.
- * Se mantiene actualizada mediante eventos de RabbitMQ.
+ * Entidad de solo lectura que representa un servicio.
+ * Esta información se sincroniza desde el microservicio de servicios.
+ * Se utiliza únicamente para validaciones en la creación de reservas.
+ * Los datos completos del servicio se obtienen desde su microservicio original.
  */
 @Entity
-@Table(name = "service")
+@Table(name = "services")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class ServiceEntity {
 
     @Id
-    @Column(name = "service_id", nullable = false)
-    private Long serviceId;
+    @Column(nullable = false)
+    private Long id;
 
     @Column(nullable = false)
-    private String name;
-
-    @Column(columnDefinition = "TEXT")
-    private String description;
-
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
-
-    @Column(name = "duration_minutes", nullable = false)
-    private Integer durationMinutes;
+    private Double price;
 
     @Column(nullable = false)
-    private Boolean active;
+    private Integer duration;
 
-    @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
-    }
+    @Column(nullable = false)
+    private Boolean availabilityStatus;
 }

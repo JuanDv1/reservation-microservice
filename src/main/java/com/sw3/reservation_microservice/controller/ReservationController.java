@@ -1,9 +1,10 @@
 package com.sw3.reservation_microservice.controller;
 
-import com.sw3.reservation_microservice.controller.dto.CreateReservationRequestDTO;
-import com.sw3.reservation_microservice.controller.dto.RescheduleReservationRequestDTO;
+import com.sw3.reservation_microservice.controller.dto.request.CreateReservationRequestDTO;
+import com.sw3.reservation_microservice.controller.dto.request.RescheduleReservationRequestDTO;
 import com.sw3.reservation_microservice.domain.model.Reservation;
-import com.sw3.reservation_microservice.facade.ReservationFacade;
+import com.sw3.reservation_microservice.service.facade.ReservationFacade;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;

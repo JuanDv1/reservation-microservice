@@ -1,7 +1,7 @@
 package com.sw3.reservation_microservice.service.validation.handlers;
 
-import com.sw3.reservation_microservice.controller.dto.CreateReservationRequestDTO;
-import com.sw3.reservation_microservice.controller.controladorExcepciones.excepcionesPropias.ReservationValidationException;
+import com.sw3.reservation_microservice.config.controladorExcepciones.excepcionesPropias.ReservationValidationException;
+import com.sw3.reservation_microservice.controller.dto.request.CreateReservationRequestDTO;
 import com.sw3.reservation_microservice.service.validation.BaseValidatorHandler;
 import org.springframework.stereotype.Component;
 

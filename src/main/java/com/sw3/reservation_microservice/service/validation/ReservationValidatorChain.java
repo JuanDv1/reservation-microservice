@@ -1,12 +1,12 @@
 package com.sw3.reservation_microservice.service.validation;
 
-import com.sw3.reservation_microservice.controller.dto.CreateReservationRequestDTO;
+import com.sw3.reservation_microservice.controller.dto.request.CreateReservationRequestDTO;
 import com.sw3.reservation_microservice.service.validation.handlers.BarberAvailabilityHandler;
-import com.sw3.reservation_microservice.service.validation.handlers.BarberExistsHandler;
-import com.sw3.reservation_microservice.service.validation.handlers.BarberScheduleValidatorHandler;
+import com.sw3.reservation_microservice.service.validation.handlers.BarberServiceValidatorHandler;
 import com.sw3.reservation_microservice.service.validation.handlers.RequiredFieldsHandler;
-import com.sw3.reservation_microservice.service.validation.handlers.ServiceExistsHandler;
+import com.sw3.reservation_microservice.service.validation.handlers.ServiceValidatorHandler;
 import com.sw3.reservation_microservice.service.validation.handlers.TimeConsistencyHandler;
+import com.sw3.reservation_microservice.service.validation.handlers.WorkShiftValidatorHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +14,14 @@ import jakarta.annotation.PostConstruct;
 
 /**
  * Construye y ejecuta la cadena de validación de reservas.
+ * 
+ * Orden de validación optimizado:
+ * 1. Campos requeridos (validación básica de datos)
+ * 2. Consistencia de tiempo (fechas válidas y futuras)
+ * 3. Servicio existe y está activo
+ * 4. Barbero existe, está activo y ofrece el servicio
+ * 5. Horarios disponibles del barbero (WorkShift)
+ * 6. Disponibilidad del barbero (sin solapamiento de reservas)
  */
 @Component
 public class ReservationValidatorChain {
@@ -25,13 +33,13 @@ public class ReservationValidatorChain {
     private TimeConsistencyHandler timeConsistencyHandler;
 
     @Autowired
-    private BarberScheduleValidatorHandler barberScheduleValidatorHandler;
+    private ServiceValidatorHandler serviceValidatorHandler;
 
     @Autowired
-    private BarberExistsHandler barberExistsHandler;
+    private BarberServiceValidatorHandler barberServiceValidatorHandler;
 
     @Autowired
-    private ServiceExistsHandler serviceExistsHandler;
+    private WorkShiftValidatorHandler workShiftValidatorHandler;
 
     @Autowired
     private BarberAvailabilityHandler barberAvailabilityHandler;
@@ -40,19 +48,12 @@ public class ReservationValidatorChain {
 
     @PostConstruct
     public void buildChain() {
-        // Construir la cadena de responsabilidades
-        // Orden: 
-        // 1. Campos requeridos
-        // 2. Consistencia de tiempo
-        // 3. Barbero existe y está activo
-        // 4. Servicio existe y está activo
-        // 5. Horario del barbero (valida schedule específico)
-        // 6. Disponibilidad del barbero
+        // Construir la cadena de responsabilidades en orden óptimo
         requiredFieldsHandler.setNext(timeConsistencyHandler);
-        timeConsistencyHandler.setNext(barberExistsHandler);
-        barberExistsHandler.setNext(serviceExistsHandler);
-        serviceExistsHandler.setNext(barberScheduleValidatorHandler);
-        barberScheduleValidatorHandler.setNext(barberAvailabilityHandler);
+        timeConsistencyHandler.setNext(serviceValidatorHandler);
+        serviceValidatorHandler.setNext(barberServiceValidatorHandler);
+        barberServiceValidatorHandler.setNext(workShiftValidatorHandler);
+        workShiftValidatorHandler.setNext(barberAvailabilityHandler);
 
         chain = requiredFieldsHandler;
     }

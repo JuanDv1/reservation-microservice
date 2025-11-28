@@ -1,14 +1,16 @@
 package com.sw3.reservation_microservice.service;
 
 import com.sw3.reservation_microservice.access.ReservationRepository;
-import com.sw3.reservation_microservice.controller.dto.CreateReservationRequestDTO;
-import com.sw3.reservation_microservice.controller.dto.RescheduleReservationRequestDTO;
+import com.sw3.reservation_microservice.config.controladorExcepciones.excepcionesPropias.InvalidReservationDeletionException;
+import com.sw3.reservation_microservice.config.controladorExcepciones.excepcionesPropias.ReservationNotFoundException;
+import com.sw3.reservation_microservice.controller.dto.request.*;
 import com.sw3.reservation_microservice.domain.model.Reservation;
 import com.sw3.reservation_microservice.domain.model.ReservationStatus;
-import com.sw3.reservation_microservice.controller.controladorExcepciones.excepcionesPropias.ReservationNotFoundException;
-import com.sw3.reservation_microservice.controller.controladorExcepciones.excepcionesPropias.InvalidReservationDeletionException;
+import com.sw3.reservation_microservice.domain.model.ServiceEntity;
 import com.sw3.reservation_microservice.service.validation.ReservationValidatorChain;
 import com.sw3.reservation_microservice.service.validation.RescheduleValidatorChain;
+import com.sw3.reservation_microservice.access.ServiceRepository;
+import com.sw3.reservation_microservice.utils.ReservationTimeCalculator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,7 +23,7 @@ import java.util.Optional;
  * Servicio para gestionar reservas.
  */
 @Service
-public class ReservationService {
+public class ReservationService implements IReservationService {
 
     @Autowired
     private ReservationRepository reservationRepository;
@@ -32,6 +34,9 @@ public class ReservationService {
     @Autowired
     private RescheduleValidatorChain rescheduleValidatorChain;
 
+    @Autowired
+    private ServiceRepository serviceRepository;
+
     /**
      * Crea una nueva reserva después de validarla con la cadena de responsabilidades.
      */
@@ -40,13 +45,23 @@ public class ReservationService {
         // Ejecutar todas las validaciones
         validatorChain.validate(request);
 
+        // Obtener el servicio para calcular la duración
+        ServiceEntity service = serviceRepository.findById(request.getServiceId())
+            .orElseThrow(() -> new RuntimeException("Servicio no encontrado."));
+
+        // Calcular automáticamente el endTime basado en bloques de 10 minutos
+        LocalDateTime expectedEndTime = ReservationTimeCalculator.calculateEndTime(
+            request.getStartTime(), 
+            service.getDuration()
+        );
+
         // Si todas las validaciones pasan, crear la reserva
         Reservation reservation = new Reservation();
         reservation.setClientId(request.getClientId());
         reservation.setBarberId(request.getBarberId());
         reservation.setServiceId(request.getServiceId());
         reservation.setStartTime(request.getStartTime());
-        reservation.setEndTime(request.getEndTime());
+        reservation.setEndTime(expectedEndTime);
         reservation.setPrice(request.getPrice());
         // El status y state ya se inicializan en el constructor
 
