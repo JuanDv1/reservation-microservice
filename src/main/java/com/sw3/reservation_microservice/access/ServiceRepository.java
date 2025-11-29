@@ -13,10 +13,10 @@ public interface ServiceRepository extends JpaRepository<ServiceEntity, Long> {
     /**
      * Busca un servicio activo por su ID.
      */
-    Optional<ServiceEntity> findByServiceIdAndActiveTrue(Long serviceId);
-
+Optional<ServiceEntity> findByIdAndAvailabilityStatusTrue(Long id);
+    
     /**
      * Verifica si un servicio existe y está activo.
      */
-    boolean existsByServiceIdAndActiveTrue(Long serviceId);
+    boolean existsByIdAndAvailabilityStatusTrue(Long id);
 }

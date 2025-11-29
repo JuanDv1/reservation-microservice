@@ -37,7 +37,9 @@ public class ServiceEventListener {
             // Convertir BigDecimal a Double para price
             service.setPrice(event.getPrice() != null ? event.getPrice().doubleValue() : null);
             service.setDuration(event.getDuration());
-            service.setAvailabilityStatus(event.getAvailabilityStatus());
+
+            boolean availabilityStatus = "Activo".equalsIgnoreCase(event.getAvailabilityStatus());
+            service.setAvailabilityStatus(availabilityStatus);
             serviceRepository.save(service);
             log.info("[ServiceEventListener] Servicio sincronizado en BD local: ID={}, Estado={}", service.getId(), service.getAvailabilityStatus());
         } catch (Exception e) {

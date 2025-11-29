@@ -11,7 +11,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BarberEventDTO {
     private Long id;
-    private String name;
-    private String email;
     private Boolean active;
 }

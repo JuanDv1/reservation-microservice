@@ -12,10 +12,10 @@ public interface BarberRepository extends JpaRepository<Barber, Long> {
     /**
      * Busca un barbero activo por su ID.
      */
-    Optional<Barber> findByBarberIdAndActiveTrue(Long barberId);
+    Optional<Barber> findByIdAndAvailabilityStatusTrue(Long id);
 
     /**
      * Verifica si un barbero existe y está activo.
      */
-    boolean existsByBarberIdAndActiveTrue(Long barberId);
+    boolean existsByIdAndAvailabilityStatusTrue(Long id);
 }
