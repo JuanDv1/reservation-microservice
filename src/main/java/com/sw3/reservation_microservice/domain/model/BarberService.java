@@ -24,7 +24,7 @@ public class BarberService {
     private Long id;
 
     @Column(name = "barber_id", nullable = false)
-    private Long barberId;
+    private String barberId;
 
     @Column(name = "service_id", nullable = false)
     private Long serviceId;

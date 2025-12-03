@@ -15,5 +15,5 @@ public class WorkShiftEventDTO {
     private String dayOfWeek;
     private LocalTime startTime;
     private LocalTime endTime;
-    private Long barberId;
+    private String barberId; // Cambiado a String para coincidir con WorkShiftDTO del publisher
 }

@@ -19,12 +19,12 @@ public interface BarberServiceRepository extends JpaRepository<BarberService, Lo
     /**
      * Busca todos los servicios que ofrece un barbero específico.
      */
-    List<BarberService> findByBarberId(Long barberId);
+    List<BarberService> findByBarberId(String barberId);
 
     /**
      * Busca todos los servicios activos que ofrece un barbero.
      */
-    List<BarberService> findByBarberIdAndActiveTrue(Long barberId);
+    List<BarberService> findByBarberIdAndActiveTrue(String barberId);
 
     /**
      * Busca todos los barberos que ofrecen un servicio específico.
@@ -40,12 +40,12 @@ public interface BarberServiceRepository extends JpaRepository<BarberService, Lo
      * Verifica si existe una relación activa entre un barbero y un servicio.
      * Esta validación es crucial antes de crear una reserva.
      */
-    boolean existsByBarberIdAndServiceIdAndActiveTrue(Long barberId, Long serviceId);
+    boolean existsByBarberIdAndServiceIdAndActiveTrue(String barberId, Long serviceId);
 
     /**
      * Busca una relación específica entre barbero y servicio.
      */
-    Optional<BarberService> findByBarberIdAndServiceId(Long barberId, Long serviceId);
+    Optional<BarberService> findByBarberIdAndServiceId(String barberId, Long serviceId);
 
     /**
      * Busca los IDs de barberos que ofrecen un servicio y están disponibles.
@@ -56,5 +56,5 @@ public interface BarberServiceRepository extends JpaRepository<BarberService, Lo
            "WHERE bs.serviceId = :serviceId " +
            "AND bs.active = true " +
            "AND b.availabilityStatus = true")
-    List<Long> findAvailableBarberIdsByServiceId(@Param("serviceId") Long serviceId);
+    List<String> findAvailableBarberIdsByServiceId(@Param("serviceId") Long serviceId);
 }

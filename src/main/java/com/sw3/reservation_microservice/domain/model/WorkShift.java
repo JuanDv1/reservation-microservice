@@ -24,5 +24,5 @@ public class WorkShift {
     private LocalTime endTime;
 
     @Column(name = "barber_id", nullable = false)
-    private Long barberId;
+    private String barberId; // Cambiado a String para coincidir con el microservicio de barberos
 }

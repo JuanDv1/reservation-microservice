@@ -15,7 +15,7 @@ import lombok.Data;
 public class Barber {
     @Id
     @Column(nullable = false)
-    private Long id;
+    private String id; // Cambiado a String para coincidir con el microservicio de barberos
 
     @Column(nullable = false)
     private Boolean availabilityStatus;

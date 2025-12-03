@@ -7,15 +7,15 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface BarberRepository extends JpaRepository<Barber, Long> {
+public interface BarberRepository extends JpaRepository<Barber, String> {
 
     /**
      * Busca un barbero activo por su ID.
      */
-    Optional<Barber> findByIdAndAvailabilityStatusTrue(Long id);
+    Optional<Barber> findByIdAndAvailabilityStatusTrue(String id);
 
     /**
      * Verifica si un barbero existe y está activo.
      */
-    boolean existsByIdAndAvailabilityStatusTrue(Long id);
+    boolean existsByIdAndAvailabilityStatusTrue(String id);
 }

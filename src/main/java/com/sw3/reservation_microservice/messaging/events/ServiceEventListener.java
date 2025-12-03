@@ -38,7 +38,8 @@ public class ServiceEventListener {
             service.setPrice(event.getPrice() != null ? event.getPrice().doubleValue() : null);
             service.setDuration(event.getDuration());
 
-            boolean availabilityStatus = "Activo".equalsIgnoreCase(event.getAvailabilityStatus());
+            boolean availabilityStatus = "Activo".equalsIgnoreCase(event.getAvailabilityStatus()) 
+                                       || "Disponible".equalsIgnoreCase(event.getAvailabilityStatus());
             service.setAvailabilityStatus(availabilityStatus);
             serviceRepository.save(service);
             log.info("[ServiceEventListener] Servicio sincronizado en BD local: ID={}, Estado={}", service.getId(), service.getAvailabilityStatus());

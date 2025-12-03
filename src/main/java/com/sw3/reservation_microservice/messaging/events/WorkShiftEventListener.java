@@ -37,6 +37,7 @@ public class WorkShiftEventListener {
             workShift.setDayOfWeek(event.getDayOfWeek());
             workShift.setStartTime(event.getStartTime());
             workShift.setEndTime(event.getEndTime());
+            // barberId se mantiene como String en WorkShift, solo necesitamos asignarlo
             workShift.setBarberId(event.getBarberId());
             workShiftRepository.save(workShift);
             log.info("[WorkShiftEventListener] WorkShift sincronizado en BD local: ID={}, BarberId={}", workShift.getId(), workShift.getBarberId());

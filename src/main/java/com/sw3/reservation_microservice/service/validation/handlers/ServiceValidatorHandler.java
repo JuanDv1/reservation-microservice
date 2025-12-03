@@ -5,7 +5,7 @@ import com.sw3.reservation_microservice.config.controladorExcepciones.excepcione
 import com.sw3.reservation_microservice.controller.dto.request.CreateReservationRequestDTO;
 import com.sw3.reservation_microservice.domain.model.ServiceEntity;
 import com.sw3.reservation_microservice.service.validation.BaseValidatorHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
  * 2. El servicio esté activo (availabilityStatus = true)
  */
 @Component
+@RequiredArgsConstructor
 public class ServiceValidatorHandler extends BaseValidatorHandler {
 
-    @Autowired
-    private ServiceRepository serviceRepository;
+    private final ServiceRepository serviceRepository;
 
     @Override
     protected void validateConcrete(CreateReservationRequestDTO request) {

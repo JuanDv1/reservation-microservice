@@ -27,6 +27,7 @@ public class Reservation {
 
     @Column(nullable = false)
     private Long serviceId;
+    
     @Column(nullable = false)
     private LocalDateTime startTime;
 

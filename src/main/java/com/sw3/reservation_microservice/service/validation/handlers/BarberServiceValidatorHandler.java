@@ -6,7 +6,7 @@ import com.sw3.reservation_microservice.config.controladorExcepciones.excepcione
 import com.sw3.reservation_microservice.controller.dto.request.CreateReservationRequestDTO;
 import com.sw3.reservation_microservice.domain.model.Barber;
 import com.sw3.reservation_microservice.service.validation.BaseValidatorHandler;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -16,17 +16,15 @@ import org.springframework.stereotype.Component;
  * 3. El barbero ofrezca el servicio solicitado (mediante BarberService)
  */
 @Component
+@RequiredArgsConstructor
 public class BarberServiceValidatorHandler extends BaseValidatorHandler {
 
-    @Autowired
-    private BarberRepository barberRepository;
-
-    @Autowired
-    private BarberServiceRepository barberServiceRepository;
+    private final BarberRepository barberRepository;
+    private final BarberServiceRepository barberServiceRepository;
 
     @Override
     protected void validateConcrete(CreateReservationRequestDTO request) {
-        Long barberId = Long.parseLong(request.getBarberId());
+        String barberId = request.getBarberId();
         Long serviceId = request.getServiceId();
 
         // 1. Verificar que el barbero existe
