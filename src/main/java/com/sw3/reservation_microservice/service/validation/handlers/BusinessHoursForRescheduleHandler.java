@@ -26,14 +26,13 @@ public class BusinessHoursForRescheduleHandler extends RescheduleValidatorHandle
     protected void validateConcrete(RescheduleReservationRequestDTO request, String barberId, Long reservationId) {
         LocalDateTime start = request.getStartTime();
         LocalDateTime end = request.getEndTime();
-        Long barberIdLong = Long.parseLong(barberId);
 
         // Determinar el día de la semana
         DayOfWeek dow = start.getDayOfWeek();
         String dayKey = dow.name();
 
         // Buscar turnos del barbero para ese día
-        List<WorkShift> shifts = workShiftRepository.findShiftsForDay(barberIdLong, dayKey);
+        List<WorkShift> shifts = workShiftRepository.findShiftsForDay(barberId, dayKey);
         
         if (shifts.isEmpty()) {
             throw new ReservationValidationException(

@@ -6,7 +6,6 @@ import com.sw3.reservation_microservice.domain.model.Reservation;
 import com.sw3.reservation_microservice.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -42,17 +41,13 @@ public class ReservationFacade {
     }
 
     /**
-     * Gestiona el ciclo de vida de la reserva: Inicio de servicio
+     * Cambia el estado de la reserva coordinando:
+     * - Validación automática de inasistencia (10 minutos después del inicio)
+     * - Patrón State (transiciones válidas)
+     * - Persistencia
      */
-    public Reservation startService(Long reservationId) {
-        return reservationService.startService(reservationId);
-    }
-
-    /**
-     * Gestiona el ciclo de vida de la reserva: Finalización de servicio
-     */
-    public Reservation finishService(Long reservationId) {
-        return reservationService.finishService(reservationId);
+    public Reservation changeReservationStatus(Long reservationId, String newStatus) {
+        return reservationService.changeReservationStatus(reservationId, newStatus);
     }
 
     /**
@@ -93,15 +88,15 @@ public class ReservationFacade {
     /**
      * Validación de regla de negocio: ¿Se puede desactivar un barbero?
      */
-    public boolean canDeactivateBarber(String barberId) {
-        return reservationService.canDeactivateBarber(barberId);
+    public boolean canDesactivateBarber(String barberId) {
+        return reservationService.canDesactivateBarber(barberId);
     }
 
     /**
      * Validación de regla de negocio: ¿Se puede desactivar un servicio?
      */
-    public boolean canDeactivateService(Long serviceId) {
-        return reservationService.canDeactivateService(serviceId);
+    public boolean canDesactivateService(Long serviceId) {
+        return reservationService.canDesactivateService(serviceId);
     }
 
     /**

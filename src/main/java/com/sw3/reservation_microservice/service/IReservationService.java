@@ -69,21 +69,6 @@ public interface IReservationService {
      */
     Reservation cancelReservation(Long reservationId, String clientId);
 
-    /**
-     * Inicia el servicio de una reserva (usa el patrón State).
-     * 
-     * @param reservationId identificador de la reserva
-     * @return la reserva con el servicio iniciado
-     */
-    Reservation startService(Long reservationId);
-
-    /**
-     * Finaliza el servicio de una reserva (usa el patrón State).
-     * 
-     * @param reservationId identificador de la reserva
-     * @return la reserva con el servicio finalizado
-     */
-    Reservation finishService(Long reservationId);
 
     /**
      * Verifica si un barbero puede ser desactivado (no tiene reservas futuras).
@@ -91,7 +76,7 @@ public interface IReservationService {
      * @param barberId identificador del barbero
      * @return true si el barbero puede ser desactivado, false en caso contrario
      */
-    boolean canDeactivateBarber(String barberId);
+    boolean canDesactivateBarber(String barberId);
 
     /**
      * Verifica si un servicio puede ser desactivado (no está en reservas futuras).
@@ -99,7 +84,7 @@ public interface IReservationService {
      * @param serviceId identificador del servicio
      * @return true si el servicio puede ser desactivado, false en caso contrario
      */
-    boolean canDeactivateService(Long serviceId);
+    boolean canDesactivateService(Long serviceId);
 
     /**
      * Reprograma una reserva (cambia fecha/hora).

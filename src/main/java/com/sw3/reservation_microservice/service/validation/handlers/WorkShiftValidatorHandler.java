@@ -33,7 +33,7 @@ public class WorkShiftValidatorHandler extends BaseValidatorHandler {
     @Override
     protected void validateConcrete(CreateReservationRequestDTO request) {
         LocalDateTime start = request.getStartTime();
-        Long barberId = Long.parseLong(request.getBarberId());
+        String barberId = request.getBarberId();
 
         // Obtener el servicio para calcular el endTime
         ServiceEntity service = serviceRepository.findById(request.getServiceId())

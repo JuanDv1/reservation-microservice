@@ -7,6 +7,7 @@ import com.sw3.reservation_microservice.controller.dto.request.*;
 import com.sw3.reservation_microservice.domain.model.Reservation;
 import com.sw3.reservation_microservice.domain.model.ReservationStatus;
 import com.sw3.reservation_microservice.domain.model.ServiceEntity;
+import com.sw3.reservation_microservice.domain.state.InasistenciaState;
 import com.sw3.reservation_microservice.service.validation.ReservationValidatorChain;
 import com.sw3.reservation_microservice.service.validation.RescheduleValidatorChain;
 import com.sw3.reservation_microservice.access.ServiceRepository;
@@ -130,28 +131,41 @@ public class ReservationService implements IReservationService {
         return reservationRepository.save(reservation);
     }
 
+  
+
     /**
-     * Inicia el servicio de una reserva (usa el patrón State).
+     * Cambia el estado de una reserva basándose en el nuevo estado solicitado.
+     * Valida automáticamente si debe marcarse como INASISTENCIA (después de 10 min de la hora de inicio).
+     * Solo permite transiciones válidas: EN_ESPERA -> EN_PROCESO -> FINALIZADA
      */
     @Transactional
-    public Reservation startService(Long reservationId) {
+    public Reservation changeReservationStatus(Long reservationId, String newStatus) {
         Reservation reservation = reservationRepository.findById(reservationId)
             .orElseThrow(() -> new RuntimeException("Reserva no encontrada."));
 
-        reservation.iniciarServicio();
+        // Validar si debe marcarse automáticamente como INASISTENCIA
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime tenMinutesAfterStart = reservation.getStartTime().plusMinutes(10);
+        
+        if (reservation.getStatus() == ReservationStatus.EN_ESPERA && 
+            now.isAfter(tenMinutesAfterStart)) {
+            // Automáticamente marcar como inasistencia si pasaron más de 10 minutos
+            reservation.setStatus(ReservationStatus.INASISTENCIA);
+            reservation.setState(new InasistenciaState());
+            return reservationRepository.save(reservation);
+        }
 
-        return reservationRepository.save(reservation);
-    }
-
-    /**
-     * Finaliza el servicio de una reserva (usa el patrón State).
-     */
-    @Transactional
-    public Reservation finishService(Long reservationId) {
-        Reservation reservation = reservationRepository.findById(reservationId)
-            .orElseThrow(() -> new RuntimeException("Reserva no encontrada."));
-
-        reservation.finalizarServicio();
+        // Cambiar estado según lo solicitado (sin opción manual de inasistencia)
+        switch (newStatus.toUpperCase()) {
+            case "EN_PROCESO":
+                reservation.iniciarServicio();
+                break;
+            case "FINALIZADA":
+                reservation.finalizarServicio();
+                break;
+            default:
+                throw new RuntimeException("Estado no válido: " + newStatus + ". Estados permitidos: EN_PROCESO, FINALIZADA");
+        }
 
         return reservationRepository.save(reservation);
     }
@@ -159,14 +173,14 @@ public class ReservationService implements IReservationService {
     /**
      * Verifica si un barbero puede ser desactivado (no tiene reservas futuras).
      */
-    public boolean canDeactivateBarber(String barberId) {
+    public boolean canDesactivateBarber(String barberId) {
         return !reservationRepository.existsByBarberIdAndStartTimeAfter(barberId, LocalDateTime.now());
     }
 
     /**
      * Verifica si un servicio puede ser desactivado (no está en reservas futuras).
      */
-    public boolean canDeactivateService(Long serviceId) {
+    public boolean canDesactivateService(Long serviceId) {
         return !reservationRepository.existsByServiceIdAndStartTimeAfter(serviceId, LocalDateTime.now());
     }
 

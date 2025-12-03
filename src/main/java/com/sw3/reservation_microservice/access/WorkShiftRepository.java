@@ -11,10 +11,10 @@ import java.util.List;
 @Repository
 public interface WorkShiftRepository extends JpaRepository<WorkShift, Long> {
 
-    List<WorkShift> findByBarberId(Long barberId);
+    List<WorkShift> findByBarberId(String barberId);
 
-    List<WorkShift> findByBarberIdAndDayOfWeek(Long barberId, String dayOfWeek);
+    List<WorkShift> findByBarberIdAndDayOfWeek(String barberId, String dayOfWeek);
 
     @Query("SELECT ws FROM WorkShift ws WHERE ws.barberId = :barberId AND ws.dayOfWeek = :dayOfWeek")
-    List<WorkShift> findShiftsForDay(@Param("barberId") Long barberId, @Param("dayOfWeek") String dayOfWeek);
+    List<WorkShift> findShiftsForDay(@Param("barberId") String barberId, @Param("dayOfWeek") String dayOfWeek);
 }
