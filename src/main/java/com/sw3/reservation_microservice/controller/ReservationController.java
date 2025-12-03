@@ -68,6 +68,15 @@ public class ReservationController {
     }
 
     /**
+     * Obtiene todas las reservas de un barbero.
+     */
+    @GetMapping("barbero/reservations/barbero/{barberId}")
+    public ResponseEntity<List<Reservation>> getBarberReservations(@PathVariable String barberId) {
+        List<Reservation> reservations = reservationFacade.getBarberReservations(barberId);
+        return ResponseEntity.ok(reservations);
+    }
+
+    /**
      * Obtiene las reservas de un barbero para un día específico.
      */
     @GetMapping("barbero/reservations/barbero/{barberId}/day")

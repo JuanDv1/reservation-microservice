@@ -13,5 +13,5 @@ import java.util.List;
 public class BarberEventDTO {
     private String id; // Cambiado a String para coincidir con BarberEventDTO del publisher
     private Boolean active;
-    private List<String> serviceIds; // Lista de servicios que ofrece el barbero
+    private List<Long> serviceIds; // Lista de IDs de servicios (Long) que ofrece el barbero
 }

@@ -104,6 +104,14 @@ public class ReservationService implements IReservationService {
     }
 
     /**
+     * Obtiene todas las reservas activas y futuras de un barbero.
+     * Se usa para calcular disponibilidad de horarios.
+     */
+    public List<Reservation> getAllReservationsByBarber(String barberId) {
+        return reservationRepository.findActiveReservationsByBarberId(barberId, LocalDateTime.now());
+    }
+
+    /**
      * Obtiene las reservas de un barbero para un día específico.
      */
     public List<Reservation> getBarberReservationsByDay(String barberId, LocalDateTime day) {
@@ -198,12 +206,25 @@ public class ReservationService implements IReservationService {
             throw new RuntimeException("Solo se pueden reprogramar reservas en estado EN_ESPERA.");
         }
 
+        // Obtener el servicio para calcular la duración
+        ServiceEntity service = serviceRepository.findById(reservation.getServiceId())
+            .orElseThrow(() -> new RuntimeException("Servicio no encontrado."));
+
+        // Calcular automáticamente el endTime basado en bloques de 10 minutos
+        LocalDateTime expectedEndTime = ReservationTimeCalculator.calculateEndTime(
+            request.getStartTime(), 
+            service.getDuration()
+        );
+        
+        // Asignar endTime calculado al request para que pase las validaciones si es necesario
+        request.setEndTime(expectedEndTime);
+
         // Ejecutar validaciones de reprogramación
         rescheduleValidatorChain.validate(request, reservation.getBarberId(), reservationId);
 
         // Actualizar fechas
         reservation.setStartTime(request.getStartTime());
-        reservation.setEndTime(request.getEndTime());
+        reservation.setEndTime(expectedEndTime);
 
         return reservationRepository.save(reservation);
     }

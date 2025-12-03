@@ -5,6 +5,7 @@ import java.util.Locale;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -114,6 +115,21 @@ public class RestApiExceptionHandler {
                         final InvalidReservationDeletionException ex, final Locale locale) {
                 final Error error = ErrorUtils
                                 .crearError(CodigoError.ELIMINACION_NO_PERMITIDA.getCodigo(), ex.formatException(),
+                                                HttpStatus.BAD_REQUEST.value())
+                                .setUrl(req.getRequestURL().toString()).setMetodo(req.getMethod());
+                return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        }
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<Error> handleValidationExceptions(final HttpServletRequest req,
+                        final MethodArgumentNotValidException ex) {
+                String errorMessage = ex.getBindingResult().getFieldErrors().stream()
+                                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                                .reduce((a, b) -> a + "; " + b)
+                                .orElse("Error de validación");
+                
+                final Error error = ErrorUtils
+                                .crearError(CodigoError.VIOLACION_REGLA_DE_NEGOCIO.getCodigo(), errorMessage,
                                                 HttpStatus.BAD_REQUEST.value())
                                 .setUrl(req.getRequestURL().toString()).setMetodo(req.getMethod());
                 return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);

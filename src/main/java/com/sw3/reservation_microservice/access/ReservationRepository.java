@@ -36,6 +36,13 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByBarberIdAndStartTimeBetweenOrderByStartTimeAsc(String barberId, LocalDateTime startOfDay, LocalDateTime endOfDay);
     
     /**
+     * Obtiene todas las reservas activas (no canceladas) de un barbero, ordenadas por hora de inicio.
+     * Usado para calcular disponibilidad en el frontend.
+     */
+    @Query("SELECT r FROM Reservation r WHERE r.barberId = :barberId AND r.status <> 'CANCELADA' AND r.startTime >= :currentTime ORDER BY r.startTime ASC")
+    List<Reservation> findActiveReservationsByBarberId(@Param("barberId") String barberId, @Param("currentTime") LocalDateTime currentTime);
+    
+    /**
      * [RF16] Busca una reserva específica por su ID y el ID del cliente que la posee.
      * Para seguridad, asegura que un cliente solo pueda ver/cancelar sus propias reservas.
      */

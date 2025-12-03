@@ -11,7 +11,7 @@ import java.time.LocalTime;
 public class WorkShift {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY) - Comentado para permitir inserción manual de ID (espejo)
     private Long id;
 
     @Column(name = "day_of_week", nullable = false)

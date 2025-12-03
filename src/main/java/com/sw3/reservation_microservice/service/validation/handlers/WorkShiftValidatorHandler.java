@@ -47,7 +47,7 @@ public class WorkShiftValidatorHandler extends BaseValidatorHandler {
 
         // Determinar el día de la semana usando nombre de enum estándar MONDAY..SUNDAY
         DayOfWeek dow = start.getDayOfWeek();
-        String dayKey = dow.name();
+        String dayKey = mapToDatabaseDayKey(dow);
 
         // Buscar turnos del barbero para ese día
         List<WorkShift> shifts = workShiftRepository.findShiftsForDay(barberId, dayKey);
@@ -75,6 +75,21 @@ public class WorkShiftValidatorHandler extends BaseValidatorHandler {
                     start.toLocalTime(), end.toLocalTime(), getDayNameSpanish(dow), availableShifts)
             );
         }
+    }
+
+    /**
+     * Mapea el DayOfWeek al formato almacenado en la base de datos (Enum en español sin tildes).
+     */
+    private String mapToDatabaseDayKey(DayOfWeek dow) {
+        return switch (dow) {
+            case MONDAY -> "LUNES";
+            case TUESDAY -> "MARTES";
+            case WEDNESDAY -> "MIERCOLES";
+            case THURSDAY -> "JUEVES";
+            case FRIDAY -> "VIERNES";
+            case SATURDAY -> "SABADO";
+            case SUNDAY -> "DOMINGO";
+        };
     }
 
     /**

@@ -79,6 +79,13 @@ public class ReservationFacade {
     }
 
     /**
+     * Consulta simplificada: Todas las reservas de un barbero
+     */
+    public List<Reservation> getBarberReservations(String barberId) {
+        return reservationService.getAllReservationsByBarber(barberId);
+    }
+
+    /**
      * Consulta simplificada: Agenda del barbero
      */
     public List<Reservation> getBarberSchedule(String barberId, LocalDateTime day) {

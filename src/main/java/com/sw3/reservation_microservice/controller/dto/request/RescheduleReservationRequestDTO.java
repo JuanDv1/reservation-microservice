@@ -18,6 +18,6 @@ public class RescheduleReservationRequestDTO {
     @NotNull(message = "La nueva fecha y hora de inicio son obligatorias")
     private LocalDateTime startTime;
 
-    @NotNull(message = "La nueva fecha y hora de fin son obligatorias")
+    // @NotNull(message = "La nueva fecha y hora de fin son obligatorias") - Se calcula automáticamente
     private LocalDateTime endTime;
 }
